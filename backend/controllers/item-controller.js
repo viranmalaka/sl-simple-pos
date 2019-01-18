@@ -4,12 +4,12 @@ const create = (data) => {
     return new Item(data).save();
 };
 
-const find = (query, cb) => {
-    return Item.find(query, cb);
+const find = (query) => {
+    return Item.find(query);
 };
 
-const findById = (id, cb) => {
-    return Item.findById(id, cb);
+const findById = (id) => {
+    return Item.findById(id);
 };
 
 const findOneAndDelete = (query) => {
