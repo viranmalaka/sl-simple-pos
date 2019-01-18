@@ -7,7 +7,7 @@ var mongodb = require('mongodb');
 var mongoose = require('mongoose');
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var usersRouter = require('./routes/users').router;
 var itemsRouter = require('./routes/item');
 var orderRouter = require('./routes/order');
 

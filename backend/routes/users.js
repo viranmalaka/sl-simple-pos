@@ -1,20 +1,16 @@
-var express = require('express');
-var router = express.Router();
-var User = require('../models/user');
+var router = require('express').Router();
 var createError = require('http-errors');
-var jwt = require('jsonwebtoken');
+const userController = require('../controllers/user-controller');
 
-const SECRET = 'shhhhh';
-
-const isAuth = (req, res, next) => {
+const isAuthMiddleware = (req, res, next) => {
   const token = req.get('token');
-  if(token){
-    jwt.verify(token, SECRET, (err, data) => {
-      if(err) {
-        req.isAuthenticated = false;
-      } else {
+  if (token) {
+    userController.verifyToken(token, (user) => {
+      if (user) {
         req.isAuthenticated = true;
-        req.user = data;
+        req.user = user;
+      } else {
+        req.isAuthenticated = false;
       }
       next();
     });
@@ -22,60 +18,45 @@ const isAuth = (req, res, next) => {
     req.isAuthenticated = false;
     next();
   }
-}
+};
 
 /* login. */
-router.get('/test', isAuth, (req, res, next) => {
-  res.jsonp({test: 'ok'})
+router.get('/test', isAuthMiddleware, (req, res, next) => {
+  return res.jsonp({
+    test: req.isAuthenticated,
+    user: req.user
+  });
 });
 
 router.post('/', (req, res, next) => {
-  // TODO validate body
+  // TODO: validate body
   // find an user form this given username
-  User.findOne({username: req.body.username}, (err, getUser) => {
-    if(err)
-      return next(err);
-    if(getUser) // generate an error
-      return next(createError('username already exist'));
-    
-    // create new user
-    User.createUser(new User(req.body), (err, newUser) => {
-        if(err) {
-          next(err);
-        } else {
-          delete newUser['password'];
-          delete newUser['_v'];
-          res.jsonp(newUser);
-        }
-      });
+  userController.createUser(req.body).then((result) => {
+    res.jsonp(result);
+  }).catch((err) => {
+    next(createError(500, err));
   });
 });
 
 router.post('/login', (req, res, next) => {
   // TODO validate body
-  User.findOne({username: req.body.username}).select('+password').exec((err, getUser) => {
-    if(err) 
-      return next(err);
-    if(!getUser) 
-      return next(createError(404, 'user not found'))
-    
-    User.comparePassword(req.body.password, getUser.password, (err, isMatch) => {
-      if(err) 
-        return next(createError(500, 'Something went wrong'));
-      if(isMatch) {
-        jwt.sign(getUser._doc, SECRET, {expiresIn: '1m'}, (err, token) => {
-          console.log(err);
-          res.jsonp({success: true, token: token});
-        });
-      } else {
-        return next(createError(401, 'Password not matched'))
-      }
+  userController.login(req.body).then((token) => {
+    res.jsonp({
+      token: token,
+      success: true
     });
+  }).catch((err) => {
+    next(createError(err));
   });
 });
 
 router.get('/logout', (req, res, next) => {
-  res.jsonp({success: true});
+  res.jsonp({
+    success: true
+  });
 });
 
-module.exports = router;
+module.exports = {
+  router,
+  isAuthMiddleware
+};

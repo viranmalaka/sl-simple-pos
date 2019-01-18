@@ -1,12 +1,24 @@
+const Item = require('../models/item');
 
+const create = (data) => {
+    return new Item(data).save();
+};
 
-const createItem = (data, cb) => {
-    new Item(data).save(cb);
-}
-const findItem = (query, cb) => {
-    Item.find(query, cb);
-}
+const find = (query, cb) => {
+    return Item.find(query, cb);
+};
+
 const findById = (id, cb) => {
-    Item.findById(id, cb);
-}
+    return Item.findById(id, cb);
+};
 
+const findOneAndDelete = (query) => {
+    return Item.findOneAndDelete(query);
+};
+
+module.exports = {
+    create,
+    find,
+    findById,
+    findOneAndDelete,
+};

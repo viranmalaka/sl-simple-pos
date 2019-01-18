@@ -1,42 +1,47 @@
-var express = require('express');
-var router = express.Router();
-var Item = require('../models/item');
+var router = require('express').Router();
 var createError = require('http-errors');
+const itemController = require('../controllers/item-controller');
 
-/* GET index. */
+/* GET all items. */
 router.get('/', function (req, res, next) {
-    findItem({}, (err, items) => {
-        if (err)
-            return next(err);
-        res.jsonp(items);
-    });
+  itemController.find({}).then((result) => {
+    res.jsonp(result);
+  }).catch((err) => {
+    next(createError(500, err));
+  });
 });
 
+/* GET an item by it's _id */
 router.get('/:id', function (req, res, next) {
-    findById(req.params.id, (err, item) => {
-        if (err)
-            return next(err);
-        if (!item)
-            return next(createError(404, 'Not Found'));
-        res.jsonp(item);
-    });
+  itemController.findById(req.params.id).then((result) => {
+    if (result) {
+      res.jsonp(result);
+    } else {
+      next(createError(404, 'Not Found'));
+    }
+  }).catch((err) => {
+    next(createError(500, err));
+  });
 });
 
+/* POST create and item */
 router.post('/', (req, res, next) => {
-    createItem(req.body, (err, newItem) => {
-        if (err)
-            return next(err);
-        res.jsonp(newItem);
-    })
+  itemController.createItem(req.body).then((result) => {
+    res.jsonp(result);
+  }).catch((err) => {
+    next(createError(500, err))
+  });
 });
 
+/* DELETE an item by it's _id */
 router.delete('/:id', (req, res, next) => {
-    Item.findOneAndDelete({ _id: req.params.id }, (err, data) => {
-        if (err) {
-            return next(createError(err));
-        }
-        res.jsonp(data)
-    });
+  itemController.findOneAndDelete({
+    _id: req.params.id
+  }).then((result) => {
+    res.jsonp(result);
+  }).catch((err) => {
+    next(createError(500, err));
+  });
 });
 
 module.exports = router;
