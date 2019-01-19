@@ -15,8 +15,12 @@ const isAuthMiddleware = (req, res, next) => {
       next();
     });
   } else {
-    req.isAuthenticated = false;
-    next();
+    res.status(401);
+    res.jsonp({
+      error: {
+        message: 'Forbidden'
+      }
+    });
   }
 };
 
@@ -53,6 +57,16 @@ router.post('/login', (req, res, next) => {
 router.get('/logout', (req, res, next) => {
   res.jsonp({
     success: true
+  });
+});
+
+router.delete('/:id', (req, res, next) => {
+  userController.findOneAndDelete({
+    _id: req.params.id
+  }).then((result) => {
+    res.jsonp(result);
+  }).catch((err) => {
+    next(createError(err));
   });
 });
 

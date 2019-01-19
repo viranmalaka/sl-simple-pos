@@ -56,7 +56,7 @@ const login = (user) => {
       if(dbUser) {
         bycrypt.compare(user.password, dbUser.password).then((isMatch) => {
           if(isMatch) {
-            jwt.sign(dbUser._doc, SECRET, {expiresIn: '10m'}, (err, token) => {
+            jwt.sign(dbUser._doc, SECRET, {expiresIn: '10h'}, (err, token) => {
               if(err) {
                 reject('Something went wrong');
               } else {
@@ -79,9 +79,13 @@ const login = (user) => {
   });
 };
 
+const findOneAndDelete = (query) => {
+  return User.findOneAndDelete(query);
+};
 
 module.exports = {
   verifyToken,
   createUser,
-  login
+  login,
+  findOneAndDelete,
 };

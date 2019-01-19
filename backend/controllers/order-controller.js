@@ -35,15 +35,19 @@ const editOrder = (id, order) => {
         });
         if(!alreadyInList) {
           itemController.findById(order.itemId).then((dbItem) => {
-            order.items.push({
-              item: dbItem,
-              quantity: order.quantity
-            });
-            dbOrder.save().then((result) => {
-              return resolve(result);
-            }).catch((err) => {
-              reject(err);
-            });
+            if(dbItem){
+              dbOrder.items.push({
+                item: dbItem,
+                quantity: order.quantity
+              });
+              dbOrder.save().then((result) => {
+                return resolve(result);
+              }).catch((err) => {
+                reject(err);
+              });
+            } else {
+              reject('Item Not Found');
+            }
           }).catch((err) => {
             resolve(err);
           });          
@@ -61,7 +65,7 @@ const deleteItemFromOrder = (orderId, itemId) => {
   return new Promise((resolve, reject) => {
     findById(orderId).then((dbOrder) => {
       if(dbOrder) {
-        dbOrder.items = dbOrder.items.filter(x => x.item.toString() === itemId);
+        dbOrder.items = dbOrder.items.filter(x => x.item.toString() !== itemId);
         dbOrder.save().then((result) => {
           resolve(result);
         }).catch((err) => {
@@ -76,6 +80,24 @@ const deleteItemFromOrder = (orderId, itemId) => {
   });
 };
 
+const changeState = (orderId, newStatus) => {
+  return new Promise((resolve, reject) => {
+    findById(orderId).then((dbOrder) => {
+      if(dbOrder) {
+        dbOrder.status = newStatus;
+        dbOrder.save().then((newOrder) => {
+          resolve(newOrder);
+        }).catch((err) => {
+          reject(err);
+        });
+      } else {
+        reject('Order Not Found');
+      }
+    }).catch((err) => {
+      reject(err);
+    });
+  });
+};
 
 module.exports = {
   create,
@@ -84,4 +106,5 @@ module.exports = {
   editOrder,
   deleteItemFromOrder,
   deleteById,
+  changeState
 };
