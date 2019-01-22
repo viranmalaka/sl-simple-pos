@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mongodb = require('mongodb');
 var mongoose = require('mongoose');
+var cors = require('cors');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users').router;
@@ -12,6 +13,8 @@ var itemsRouter = require('./routes/item');
 var orderRouter = require('./routes/order');
 
 var app = express();
+
+app.use(cors());
 
 //MongoDB
 mongoose.Promise = global.Promise;
@@ -27,7 +30,6 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/items', itemsRouter);
 app.use('/orders', orderRouter);
-
 
 app.use('**', (req, res) => {
   res.sendFile('/public/index.html');

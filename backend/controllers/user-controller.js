@@ -22,7 +22,7 @@ const createUser = (user) => {
       username: user.username
     }).then((result) => {
       if (result) {
-        reject('username already exist');
+        reject([403, 'username already exist']);
       } else {
         bycrypt.genSalt(10).then((salt) => {
           bycrypt.hash(user.password, salt).then((hash) => {
@@ -32,17 +32,17 @@ const createUser = (user) => {
               delete result._v;
               resolve(result);
             }).catch((err) => {
-              reject(err);
+              reject([500, err]);
             });
           }).catch((err) => {
-            reject('Something went wrong');
+            reject([500, err]);
           });
         }).catch((err) => {
-          reject('Something went wrong');
+          reject([500, err]);
         });
       }
     }).catch((err) => {
-      reject(err);
+      reject([500, err]);
     });
   });
 };
@@ -58,23 +58,22 @@ const login = (user) => {
           if(isMatch) {
             jwt.sign(dbUser._doc, SECRET, {expiresIn: '10h'}, (err, token) => {
               if(err) {
-                reject('Something went wrong');
+                reject([500, 'Something went wrong']);
               } else {
-                console.log(token);
                 resolve(token);
               }
             });
           } else {
-            reject('Something went wrong');
+            reject([403, 'Password is wrong']);
           }
         }).catch((err) => {
-          reject('Something went wrong');
+          reject([500, 'Something went wrong']);
         });
       } else {
-        reject('User Not Found');
+        reject([404, 'User Not Found']);
       }
     }).catch((err) => {
-      reject(err);
+      reject([500, err]);
     });
   });
 };

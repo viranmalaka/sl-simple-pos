@@ -26,11 +26,7 @@ const editOrder = (id, order) => {
           if (x.item.toString() === order.itemId) {
             alreadyInList = true;
             x.quantity = order.quantity;
-            dbOrder.save().then((result) => {
-              return resolve(result);
-            }).catch((err) => {
-              reject(err);
-            });
+            return dbOrder.save();
           }
         });
         if(!alreadyInList) {
@@ -40,11 +36,7 @@ const editOrder = (id, order) => {
                 item: dbItem,
                 quantity: order.quantity
               });
-              dbOrder.save().then((result) => {
-                return resolve(result);
-              }).catch((err) => {
-                reject(err);
-              });
+              return dbOrder.save();
             } else {
               reject('Item Not Found');
             }

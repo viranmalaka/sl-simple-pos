@@ -25,7 +25,7 @@ const isAuthMiddleware = (req, res, next) => {
 };
 
 /* login. */
-router.get('/test', isAuthMiddleware, (req, res, next) => {
+router.get('/check-token', isAuthMiddleware, (req, res, next) => {
   return res.jsonp({
     test: req.isAuthenticated,
     user: req.user
@@ -50,7 +50,7 @@ router.post('/login', (req, res, next) => {
       success: true
     });
   }).catch((err) => {
-    next(createError(err));
+    next(createError(err[0], err[1]));
   });
 });
 
