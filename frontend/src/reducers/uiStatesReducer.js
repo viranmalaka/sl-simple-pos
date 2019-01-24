@@ -3,6 +3,8 @@ import { UI } from "../constants/actions";
 const init = {
   sidebar: true,
   redirectTo: '',
+  path: '',
+  showAllOrders: false,
 }
 
 const UIStateReducer = (state = init, action) => {
@@ -18,6 +20,19 @@ const UIStateReducer = (state = init, action) => {
         ...state,
         redirectTo: action.payload,
       }
+      break;
+    case UI.CHANGE_PATH:
+      state = {
+        ...state,
+        path: action.payload
+      }
+      break;
+    case UI.ALL_ORDERS:
+      state = {
+        ...state,
+        showAllOrders: action.payload
+      }
+      break;
     default:
   }
   return state;

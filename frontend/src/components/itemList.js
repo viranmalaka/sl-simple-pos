@@ -1,7 +1,7 @@
 import React from 'react';
 import { getAllItems, createItem } from '../actions/itemAction'
 import { connect } from 'react-redux';
-import { Button, Card, Icon, Message, Modal, Input, Label, Menu, Form } from 'semantic-ui-react'
+import { Button, Card, Icon, Message, Modal, Form, Segment } from 'semantic-ui-react'
 
 class ItemList extends React.Component {
 
@@ -34,13 +34,23 @@ class ItemList extends React.Component {
 
   render() {
     const itemsHTML = () => {
-      if (!this.props.item.allItems || this.props.item.allItems.length === 0) {
+      if (!this.props.item.allItems) {
         return (
           <Message icon>
             <Icon name='circle notched' loading />
             <Message.Content>
               <Message.Header>Just one second</Message.Header>
               We are fetching your items.
+            </Message.Content>
+          </Message>
+        )
+      } else if (this.props.item.allItems.length === 0) {
+        return (
+          <Message icon>
+            <Icon name='arrow alternate circle up outline' />
+            <Message.Content>
+              <Message.Header>You Have no any Item</Message.Header>
+              You can add items by using above button.
             </Message.Content>
           </Message>
         )
@@ -62,46 +72,43 @@ class ItemList extends React.Component {
     }
 
     return (
-      <div>
-        <Menu className="item-list-menu">
-          <Menu.Item position="right">
+      <div className="item-list-menu">
+        <Segment>
 
-            <Modal trigger={<Button animated="fade" onClick={this.handleOpen}>
-              <Button.Content visible>Add New</Button.Content>
-              <Button.Content hidden>
-                <Icon name='add' />
-              </Button.Content>
-            </Button>}
-              open={this.state.modalOpen}
-              onClose={this.handleClose}
-            >
-              <Modal.Header>Add New Item</Modal.Header>
-              <Modal.Content>
+        <Modal trigger={<Button animated="fade" fluid color='green' onClick={this.handleOpen}>
+          <Button.Content visible>Add New</Button.Content>
+          <Button.Content hidden>
+            <Icon name='add' />
+          </Button.Content>
+        </Button>}
+          open={this.state.modalOpen}
+          onClose={this.handleClose}
+        >
+          <Modal.Header>Add New Item</Modal.Header>
+          <Modal.Content>
 
-                <Form onSubmit={this.submitNewItem}>
-                  <Form.Group>
-                    <Form.Input width="10" fluid label='Item Name' placeholder='Item name' onChange={(e) => { this.handleInputs(e, 'name') }} />
-                    <Form.Input width="6" fluid label='Unit Price' placeholder='Unit price' onChange={(e) => { this.handleInputs(e, 'unitPrice') }} />
-                  </Form.Group>
-                  <Form.TextArea label='Description' placeholder='Small description about the item' onChange={(e) => { this.handleInputs(e, 'description') }} />
+            <Form onSubmit={this.submitNewItem}>
+              <Form.Group>
+                <Form.Input width="10" fluid label='Item Name' placeholder='Item name' onChange={(e) => { this.handleInputs(e, 'name') }} />
+                <Form.Input width="6" fluid label='Unit Price' placeholder='Unit price' onChange={(e) => { this.handleInputs(e, 'unitPrice') }} />
+              </Form.Group>
+              <Form.TextArea label='Description' placeholder='Small description about the item' onChange={(e) => { this.handleInputs(e, 'description') }} />
 
-                  {/* {TODO: Show and error message on failures} */}
-                  
-                  <Form.Button position="right">Submit</Form.Button>
-                </Form>
+              {/* {TODO: Show and error message on failures} */}
 
-              </Modal.Content>
-            </Modal>
+              <Form.Button position="right">Submit</Form.Button>
+            </Form>
+
+          </Modal.Content>
+        </Modal>
+        </Segment>
 
 
-          </Menu.Item>
-        </Menu>
         <div>
           <Card.Group itemsPerRow="3">
             {itemsHTML()}
           </Card.Group>
         </div>
-        {JSON.stringify(this.props.item)}
       </div>
     )
   }
@@ -118,9 +125,7 @@ const mapDispatchToProps = (dispatch) => {
     getAllItems: () => {
       dispatch(getAllItems());
     },
-    createItem: (data) => {
-      dispatch(createItem(data));
-    }
+    createItem: (data) => dispatch(createItem(data)),
   };
 };
 

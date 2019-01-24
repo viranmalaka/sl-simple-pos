@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import './App.css';
-import TopNavBar from "./components/navbar";
-import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
+import { Route, Switch, BrowserRouter as Router, Redirect } from 'react-router-dom';
 import Login from './components/login';
-import OrderList from "./components/OrderList";
-import ItemList from "./components/itemList";
+
+import AuthenticatedComponent from './components/authenticated';
 
 export default class App extends Component {
 
@@ -14,14 +13,11 @@ export default class App extends Component {
         <Router>
 
           <div>
-            <TopNavBar></TopNavBar>
-            <div className="ui container">
-              <Switch>
-                <Route path="/login" component={Login}></Route>
-                <Route path="/orders-list" component={OrderList}></Route>
-                <Route path="/items-list" component={ItemList}></Route>
-              </Switch>
-            </div>
+            <Switch>
+              <Redirect from="/" to="/login" exact={true} />
+              <Route path="/login" component={Login}></Route>
+              <Route path="/user" component={AuthenticatedComponent}></Route>
+            </Switch>
           </div>
         </Router>
       </div>

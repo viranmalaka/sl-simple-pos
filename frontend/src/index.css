@@ -13,10 +13,36 @@ code {
     monospace;
 }
 
-.order-list, .item-list-menu {
+.order-list, .item-list-menu, .order-details-content {
   margin-top: 10px!important;
 }
 
 a.menu-item {
   color: black!important;
+}
+
+h1, h2, h3, h4, h5, h6, span {
+  color: black;
+}
+
+.summery-number {
+  position: absolute;
+  right: 15px;
+}
+
+.ui.labeled.input > input {
+  width: 75%
+}
+
+input[type=number]::-webkit-inner-spin-button
+input[type=number]::-webkit-outer-spin-button { 
+  background-color: red;
+}
+
+.ui.button > a {
+  color: white;
+}
+
+.ui.checkbox > label, label:hover {
+  color: white
 }

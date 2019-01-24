@@ -13,9 +13,8 @@ class Login extends React.Component {
   submit = (e) => {
     e.preventDefault();
     this.props.login(this.state.username, this.state.password).then(() => {
-      this.props.history.push('/orders-list');
+      this.props.history.push('/user/orders-list');
     });
-
   }
 
   handleInputs = (e, key) => {
@@ -69,7 +68,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     login: (username, password) => dispatch(login(username, password)),
-    
   };
 };
 

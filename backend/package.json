@@ -9,7 +9,8 @@
   },
   "jest": {
     "bail": true,
-    "verbose": false
+    "testEnvironment": "node",
+    "collectCoverage" : true
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

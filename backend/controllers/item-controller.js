@@ -1,9 +1,5 @@
 const Item = require('../models/item');
 
-const test = () => {
-    return {};
-}
-
 const create = (data) => {
     return new Item(data).save();
 };
@@ -25,5 +21,4 @@ module.exports = {
     find,
     findById,
     findOneAndDelete,
-    test
 };

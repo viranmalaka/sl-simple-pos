@@ -20,29 +20,37 @@ const deleteById = (id) => {
 const editOrder = (id, order) => {
   return new Promise((resolve, reject) => {
     findById(id).then(dbOrder => {
-      if(dbOrder) {
+      if (dbOrder) {
         let alreadyInList = false;
-        dbOrder.items.forEach(x => {
+        for(let x of dbOrder.items) {
           if (x.item.toString() === order.itemId) {
             alreadyInList = true;
             x.quantity = order.quantity;
-            return dbOrder.save();
+            dbOrder.save().then((result) => {
+              resolve(result)
+            }).catch((err) => {
+              reject(err);
+            });;
           }
-        });
-        if(!alreadyInList) {
+        };
+        if (!alreadyInList) {
           itemController.findById(order.itemId).then((dbItem) => {
-            if(dbItem){
+            if (dbItem) {
               dbOrder.items.push({
                 item: dbItem,
                 quantity: order.quantity
               });
-              return dbOrder.save();
+              dbOrder.save().then((result) => {
+                resolve(result);
+              }).catch((err) => {
+                reject(err);
+              });;
             } else {
               reject('Item Not Found');
             }
           }).catch((err) => {
             resolve(err);
-          });          
+          });
         }
       } else {
         reject('Not found');
@@ -56,7 +64,7 @@ const editOrder = (id, order) => {
 const deleteItemFromOrder = (orderId, itemId) => {
   return new Promise((resolve, reject) => {
     findById(orderId).then((dbOrder) => {
-      if(dbOrder) {
+      if (dbOrder) {
         dbOrder.items = dbOrder.items.filter(x => x.item.toString() !== itemId);
         dbOrder.save().then((result) => {
           resolve(result);
@@ -75,7 +83,7 @@ const deleteItemFromOrder = (orderId, itemId) => {
 const changeState = (orderId, newStatus) => {
   return new Promise((resolve, reject) => {
     findById(orderId).then((dbOrder) => {
-      if(dbOrder) {
+      if (dbOrder) {
         dbOrder.status = newStatus;
         dbOrder.save().then((newOrder) => {
           resolve(newOrder);

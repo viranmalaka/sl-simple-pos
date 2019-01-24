@@ -61,7 +61,9 @@ router.put('/change-status/:orderId', (req, res, next) => {
 });
 
 router.delete('/:orderId/delete-item/:itemId', (req, res, next) => {
+  console.log(req.params);
   orderController.deleteItemFromOrder(req.params.orderId, req.params.itemId).then((result) => {
+    console.log(result);
     res.jsonp(result);
   }).catch((err) => {
     next(createError(err));

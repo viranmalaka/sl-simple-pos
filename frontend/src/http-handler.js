@@ -26,22 +26,30 @@ const Items = {
 }
 
 const Orders = {
-  getAll: () => request.get('orders')
+  getAll: () => request.get('orders'),
+  createOrder: (body) => request.post('orders', body),
+  addItemToOrder: (orderId, itemId, quantity) => request.put('orders/add-item/' + orderId, {itemId, quantity}),
+  deleteItemFromOrder: (orderId, itemId) => request.del('orders/' + orderId + "/delete-item/" + itemId),
+  setOrderStatus: (orderId, status) => request.put('orders/change-status/' + orderId, {status}),
 }
 
 const Auth = {
   login: (username, password) => request.post('users/login', { username, password }),
+  checkAuth: () => {
+    AuthInit();
+    return request.get('users/check-token/', axiosConfig)
+  },
 }
 
-const init = () => {
+const AuthInit = () => {
   const token = window.localStorage.getItem('token');
   axiosConfig.headers.token = token;
-};
-init();
+}
 
 export {
   Items as ItemAPI,
   Auth as AuthAPI,
   Orders as OrderAPI,
-  axiosConfig
+  axiosConfig,
+  AuthInit
 }
