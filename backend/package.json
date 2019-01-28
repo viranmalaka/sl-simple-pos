@@ -10,7 +10,8 @@
   "jest": {
     "bail": true,
     "testEnvironment": "node",
-    "collectCoverage" : true
+    "collectCoverage" : true,
+    "verbose": true
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

@@ -46,7 +46,7 @@ class OrderList extends React.Component {
         return array.map((odr, index) => {
           let totAmount = 0;
           return (
-            <Card fluid raised color="green" key={odr._id} onClick={() => { this.props.history.push('/user/order/' + odr._id) }}>
+            <Card fluid raised color={odr.status === 'pending' ? 'green' : 'blue'} key={odr._id} onClick={() => { this.props.history.push('/user/order/' + odr._id) }}>
               <Card.Content >
                 <Grid>
                   <Grid.Column width="10" >

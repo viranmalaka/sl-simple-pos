@@ -2,7 +2,6 @@ var User = require('../models/user');
 var jwt = require('jsonwebtoken');
 var bycrypt = require('bcryptjs');
 
-
 const SECRET = 'shhhhh';
 
 const verifyToken = (token, cb) => {
@@ -17,65 +16,53 @@ const verifyToken = (token, cb) => {
 };
 
 const createUser = (user) => {
-  return new Promise((resolve, reject) => {
-    User.findOne({
-      username: user.username
-    }).then((result) => {
-      if (result) {
-        reject([403, 'username already exist']);
-      } else {
-        bycrypt.genSalt(10).then((salt) => {
-          bycrypt.hash(user.password, salt).then((hash) => {
-            user.password = hash;
-            new User(user).save().then((result) => {
-              delete result.password;
-              delete result._v;
-              resolve(result);
-            }).catch((err) => {
-              reject([500, err]);
-            });
-          }).catch((err) => {
-            reject([500, err]);
-          });
-        }).catch((err) => {
-          reject([500, err]);
-        });
+  return User.findOne({ username: user.username }).then(async (result) => {
+    if (!user.username || user.username === '') {
+      throw "username is Required"
+    }
+    if (!user.password || user.password === '') {
+      throw "Password is Required"
+    }
+    if (result) {
+      throw 'username already exist';
+    } else {
+      try {
+        const salt = await bycrypt.genSalt(10);
+        const hash = await bycrypt.hash(user.password, salt);
+        user.password = hash;
+        return new User(user).save();
+      } catch (error) {
+        throw error;
       }
-    }).catch((err) => {
-      reject([500, err]);
-    });
-  });
+    }
+  })
 };
 
 
 const login = (user) => {
-  return new Promise((resolve, reject) => {
-    User.findOne({username: user.username})
+  return User.findOne({ username: user.username })
     .select('+password')
-    .exec().then((dbUser) => {
-      if(dbUser) {
-        bycrypt.compare(user.password, dbUser.password).then((isMatch) => {
-          if(isMatch) {
-            jwt.sign(dbUser._doc, SECRET, {expiresIn: '10h'}, (err, token) => {
-              if(err) {
-                reject([500, 'Something went wrong']);
-              } else {
-                resolve(token);
-              }
+    .exec().then(dbUser => {
+      if (dbUser) {
+        return bycrypt.compare(user.password, dbUser.password).then((isMatch) => {
+          if (isMatch) {
+            return new Promise((resolve, reject) => {
+              jwt.sign(dbUser._doc, SECRET, { expiresIn: '10h' }, (err, token) => {
+                if (err) {
+                  reject(err);
+                } else {
+                  resolve(token);
+                }
+              })
             });
           } else {
-            reject([403, 'Password is wrong']);
+            throw "Invalid Password"
           }
-        }).catch((err) => {
-          reject([500, 'Something went wrong']);
         });
       } else {
-        reject([404, 'User Not Found']);
+        throw "User Not Found"
       }
-    }).catch((err) => {
-      reject([500, err]);
-    });
-  });
+    })
 };
 
 const findOneAndDelete = (query) => {

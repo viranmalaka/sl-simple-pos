@@ -4,7 +4,6 @@ const userController = require('../controllers/user-controller');
 
 const isAuthMiddleware = (req, res, next) => {
   const token = req.get('token');
-  console.log('token', token);
   if (token) {
     userController.verifyToken(token, (user) => {
       if (user) {

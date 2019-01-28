@@ -17,22 +17,3 @@ var schema = new Schema({
 });
 
 module.exports = mongoose.model('User', schema);
-
-module.exports.createUser = (newUser, cb) => {
-    bycrypt.genSalt(10, (err, salt) => {
-        bycrypt.hash(newUser.password, salt, (err, hash) => {
-            newUser.password = hash;
-            newUser.save(cb);
-        })
-    });
-};
-
-module.exports.comparePassword = (candidatePassword, hash, cb) => {
-    bycrypt.compare(candidatePassword, hash, (err, isMatch) => {
-        if(err){
-            console.log(err);
-        }else{
-            cb(null, isMatch);
-        }
-    });
-};

@@ -4,14 +4,14 @@ require('../test-setup');
 let oneItemId = '';
 
 // Create item
-test('createItem validation failed', () => {
+test('[SUCCESS] createItem validation failed', () => {
   expect.assertions(1);
   return ic.create({}).catch((result) => {
     expect(result).toBeDefined();
   });
 })
   
-test('createItem success', () => {
+test('[SUCCESS] createItem success', () => {
   expect.assertions(3);
   return ic.create({name: 'jest-test', unitPrice: 10}).then((result) => {
     expect(result).toBeDefined();
@@ -22,7 +22,7 @@ test('createItem success', () => {
 
 
 // Find items
-test('findItem gives a non empty array', () => {
+test('[SUCCESS] findItem gives a non empty array', () => {
   expect.assertions(2);
   return ic.find({name: 'jest-test'}).then(result => {
     expect(Array.isArray(result)).toBeTruthy();
@@ -30,7 +30,7 @@ test('findItem gives a non empty array', () => {
   })
 });
 
-test('findItem by name return only one item', () => {
+test('[SUCCESS] findItem by name return only one item', () => {
   expect.assertions(3);
   return ic.find({name: 'jest-test'}).then(result => {
     expect(result.length).toEqual(1);
@@ -40,7 +40,7 @@ test('findItem by name return only one item', () => {
   })
 });
 
-test('findItem by ID with previous _id', () => {
+test('[SUCCESS] findItem by ID with previous _id', () => {
   expect.assertions(3);
   return ic.find({_id: oneItemId}).then(result => {
     expect(result.length).toEqual(1);
@@ -49,7 +49,7 @@ test('findItem by ID with previous _id', () => {
   })
 });
 
-test('findItem by id', () => {
+test('[SUCCESS] findItem by id', () => {
   expect.assertions(3);
   return ic.findById(oneItemId).then(result => {
     expect(result).toBeDefined();
@@ -59,7 +59,7 @@ test('findItem by id', () => {
 });
 
 // delete item
-test('delete item by id', () => {
+test('[SUCCESS] delete item by id', () => {
   expect.assertions(3);
   return ic.findOneAndDelete(oneItemId).then(result => {
     expect(result).toBeDefined();
@@ -69,7 +69,7 @@ test('delete item by id', () => {
 });
 
 // find that item again
-test('delete the item successfully', () => {
+test('[SUCCESS] delete the item successfully', () => {
   expect.assertions(1);
   return ic.findById(oneItemId).then(result => {
     expect(result).toBeNull();

@@ -14,7 +14,7 @@ export default class App extends Component {
 
           <div>
             <Switch>
-              <Redirect from="/" to="/login" exact={true} />
+              <Redirect from="/" to="/login" exact />
               <Route path="/login" component={Login}></Route>
               <Route path="/user" component={AuthenticatedComponent}></Route>
             </Switch>

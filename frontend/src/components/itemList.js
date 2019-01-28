@@ -75,32 +75,35 @@ class ItemList extends React.Component {
       <div className="item-list-menu">
         <Segment>
 
-        <Modal trigger={<Button animated="fade" fluid color='green' onClick={this.handleOpen}>
-          <Button.Content visible>Add New</Button.Content>
-          <Button.Content hidden>
-            <Icon name='add' />
-          </Button.Content>
-        </Button>}
-          open={this.state.modalOpen}
-          onClose={this.handleClose}
-        >
-          <Modal.Header>Add New Item</Modal.Header>
-          <Modal.Content>
+          <Modal trigger={<Button animated="fade" fluid color='green' onClick={this.handleOpen}>
+            <Button.Content visible>Add New</Button.Content>
+            <Button.Content hidden>
+              <Icon name='add' />
+            </Button.Content>
+          </Button>}
+            open={this.state.modalOpen}
+            onClose={this.handleClose}
+          >
+            <Modal.Header>Add New Item</Modal.Header>
+            <Modal.Content>
 
-            <Form onSubmit={this.submitNewItem}>
-              <Form.Group>
-                <Form.Input width="10" fluid label='Item Name' placeholder='Item name' onChange={(e) => { this.handleInputs(e, 'name') }} />
-                <Form.Input width="6" fluid label='Unit Price' placeholder='Unit price' onChange={(e) => { this.handleInputs(e, 'unitPrice') }} />
-              </Form.Group>
-              <Form.TextArea label='Description' placeholder='Small description about the item' onChange={(e) => { this.handleInputs(e, 'description') }} />
+              <Form onSubmit={this.submitNewItem}>
+                <Form.Group>
+                  <Form.Input width="10" fluid label='Item Name' placeholder='Item name' onChange={(e) => { this.handleInputs(e, 'name') }} />
+                  <Form.Input width="6" fluid label='Unit Price' type='number' placeholder='Unit price' onChange={(e) => { this.handleInputs(e, 'unitPrice') }} />
+                </Form.Group>
+                <Form.TextArea label='Description' placeholder='Small description about the item' onChange={(e) => { this.handleInputs(e, 'description') }} />
 
-              {/* {TODO: Show and error message on failures} */}
+                <Message negative>
+                  <Message.Header>Validation Error.</Message.Header>
+                  <p>Please check again</p>
+                </Message>
 
-              <Form.Button position="right">Submit</Form.Button>
-            </Form>
+                <Form.Button position="right">Submit</Form.Button>
+              </Form>
 
-          </Modal.Content>
-        </Modal>
+            </Modal.Content>
+          </Modal>
         </Segment>
 
 
