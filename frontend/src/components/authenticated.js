@@ -1,5 +1,5 @@
 import React from 'react';
-import { login } from '../actions/userActions'
+import { login, initAuthRequest } from '../actions/userActions'
 import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import OrderList from "./OrderList";
@@ -7,11 +7,20 @@ import ItemList from "./itemList";
 import OrderDetails from "./orderDetails";
 import TopNavBar from "./navbar";
 import { AuthInit } from '../http-handler';
+import { toast } from 'react-toastify'
 
 class AuthenticatedComponent extends React.Component {
 
   componentWillMount() {
-    AuthInit();
+    if(!this.props.user.login) {
+      AuthInit();
+      this.props.initAuth().then(() => {
+        toast.success('Authentication success');
+      }).catch(() => {
+        toast.error('You are not authenticated');
+        this.props.history.push('/login');
+      });
+    }
   }
 
   render() {
@@ -39,6 +48,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     login: (username, password) => dispatch(login(username, password)),
+    initAuth: () => dispatch(initAuthRequest()),
+
   };
 };
 

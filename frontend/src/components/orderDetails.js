@@ -4,6 +4,7 @@ import { getAllOrders, addItemToOrder, setCurrentOrder, deleteItemFromOrder, set
 
 import { connect } from 'react-redux';
 import { Button, Card, Header, Modal, Grid, Input, Segment, Divider } from 'semantic-ui-react'
+import {toast} from 'react-toastify';
 
 class OrderDetails extends React.Component {
 
@@ -37,6 +38,7 @@ class OrderDetails extends React.Component {
           [itemId]: true,
         }
       })
+      toast.warn('Delete this item');
     } else {
       this.props.addItemToOrder(this.props.order.currentOrder._id, itemId, data.value === '' ? 0 : data.value, this.props.item.itemsById);
       this.setState({
@@ -109,9 +111,8 @@ class OrderDetails extends React.Component {
               <Modal open={this.state.modalOpen} onClose={this.handleClose}
                 trigger={<Button fluid color="green" onClick={this.handleOpen}>Add Item</Button>} basic size='large'>
                 <Header icon='hand point up outline' content='Select An Item' />
-                <Modal.Content image>
+                <Modal.Content>
                   <Card.Group itemsPerRow="4">
-
                     {
                       this.props.item.allItems.map(itm => {
                         return (

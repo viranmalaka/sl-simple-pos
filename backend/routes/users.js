@@ -3,22 +3,26 @@ var createError = require('http-errors');
 const userController = require('../controllers/user-controller');
 
 const isAuthMiddleware = (req, res, next) => { // an middleware for check the token
-  const token = req.get('token'); // get the token data from the headder
+  const token = req.get('token'); // get the token data from the header
   if (token) {
-    userController.verifyToken(token, (user) => {
-      if (user) {
+    userController.verifyToken(token, (err, user) => {
+      if (!err) {
         req.isAuthenticated = true;
         req.user = user; // valid token
-      } else {
-        req.isAuthenticated = false;
+        return next();
       }
-      next();
+      res.status(401);
+      res.jsonp({
+        error: {
+          message: 'Forbidden' // exception. request is end.
+        }
+      });
     });
   } else {
     res.status(401);
     res.jsonp({
       error: {
-        message: 'Forbidden' // exception. request is end.
+        message: 'No Token' // exception. request is end.
       }
     });
   }

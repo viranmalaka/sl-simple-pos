@@ -2,6 +2,7 @@ import React from 'react';
 import { getAllItems, createItem } from '../actions/itemAction'
 import { connect } from 'react-redux';
 import { Button, Card, Icon, Message, Modal, Form, Segment } from 'semantic-ui-react'
+import { toast } from 'react-toastify';
 
 class ItemList extends React.Component {
 
@@ -29,6 +30,8 @@ class ItemList extends React.Component {
   submitNewItem = () => {
     this.props.createItem((({ name, unitPrice, description }) => ({ name, unitPrice, description }))(this.state)).then((result) => {
       this.handleClose();
+    }).catch(err => {
+      toast.error(err.error.message)
     });
   }
 
@@ -98,12 +101,6 @@ class ItemList extends React.Component {
                   <Form.Input width="6" fluid label='Unit Price' type='number' placeholder='Unit price' onChange={(e) => { this.handleInputs(e, 'unitPrice') }} />
                 </Form.Group>
                 <Form.TextArea label='Description' placeholder='Small description about the item' onChange={(e) => { this.handleInputs(e, 'description') }} />
-
-                <Message negative>
-                  <Message.Header>Validation Error.</Message.Header>
-                  <p>Please check again</p>
-                </Message>
-
                 <Form.Button position="right">Submit</Form.Button>
               </Form>
 

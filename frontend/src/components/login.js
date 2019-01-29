@@ -1,7 +1,8 @@
 import React from 'react';
 import { login } from '../actions/userActions'
 import { connect } from 'react-redux';
-import { Button, Form, Grid, Message } from 'semantic-ui-react'
+import { Button, Form, Grid } from 'semantic-ui-react';
+import { toast } from 'react-toastify';
 
 class Login extends React.Component {
 
@@ -14,6 +15,9 @@ class Login extends React.Component {
     e.preventDefault();
     this.props.login(this.state.username, this.state.password).then(() => {
       this.props.history.push('/user/orders-list');
+      toast.success("Login Success")
+    }).catch(err => {
+      toast.error(err.error.message);
     });
   }
 
@@ -21,15 +25,6 @@ class Login extends React.Component {
     let s = {}
     s[key] = e.target.value;
     this.setState(s);
-  }
-
-  messageHTML = () => {
-    return this.props.user.loginError ? (
-      <Message negative>
-        <Message.Header>Error</Message.Header>
-        <p>{this.props.user.loginError.error.message}</p>
-      </Message>
-    ) : '';
   }
 
   render() {
@@ -49,9 +44,6 @@ class Login extends React.Component {
               </Form.Field>
               <Button fluid type='submit' color="green">Submit</Button>
             </Form>
-
-            {this.messageHTML()}
-
           </Grid.Column>
         </Grid>
       </div>

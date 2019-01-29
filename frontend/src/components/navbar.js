@@ -1,16 +1,11 @@
 import React from "react";
 import { Menu, Button, Checkbox } from 'semantic-ui-react'
 import { toggleSidebar, changePath, showAllOrders } from '../actions/uiActions';
-import { initAuthRequest, logout } from '../actions/userActions';
+import { logout } from '../actions/userActions';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 class TopNavBar extends React.Component {
-
-  componentDidMount() {
-    this.props.initAuth();
-  }
-
   onLogButton = () => {
     if(this.props.user.login) {
       this.props.logoutUser();
@@ -59,7 +54,6 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(toggleSidebar());
     },
     changePath: (url) => dispatch(changePath(url)),
-    initAuth: () => dispatch(initAuthRequest()),
     logoutUser: () => dispatch(logout()),
     showAllOrders: (b) => dispatch(showAllOrders(b))
   };

@@ -35,10 +35,10 @@ router.post('/', authMiddleware, (req, res, next) => {
         next(createError(500, err))
       });
     } else {
-      next(createError(401, 'Invalid unit price'))
+      next(createError(400, 'Invalid unit price'))
     }
   } else {
-    next(createError(401, 'Item name is required'))
+    next(createError(400, 'Item name is required'))
   }
 });
 

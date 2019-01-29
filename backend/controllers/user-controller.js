@@ -8,9 +8,9 @@ const verifyToken = (token, cb) => {
   // TODO: use a promise
   jwt.verify(token, SECRET, (err, data) => { // verify the given token
     if (err) {
-      cb(false); // false verification
+      cb(err); // false verification
     } else {
-      cb(data);   // success verification and send the data
+      cb(null, data);   // success verification and send the data
     }
   });
 };
