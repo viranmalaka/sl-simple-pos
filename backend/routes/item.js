@@ -27,7 +27,7 @@ router.get('/:id', authMiddleware, (req, res, next) => {
 
 /* POST create and item */
 router.post('/', authMiddleware, (req, res, next) => {
-  if(req.body.name && req.body.name !== '') { // basic validation
+  if(req.body.name) { // basic validation
     if(req.body.unitPrice && req.body.unitPrice > -1) {
       itemController.create(req.body).then((result) => {
         res.jsonp(result);

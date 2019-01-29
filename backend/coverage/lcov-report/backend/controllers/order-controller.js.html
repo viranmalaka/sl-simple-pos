@@ -22,12 +22,12 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>40/40</span>
+        <span class='fraction'>39/39</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">91.67% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>11/12</span>
+        <span class='fraction'>10/10</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -37,7 +37,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>39/39</span>
+        <span class='fraction'>38/38</span>
       </div>
     </div>
   </div>
@@ -123,7 +123,11 @@
 78
 79
 80
-81</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+81
+82
+83
+84
+85</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -142,9 +146,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">2x</span>
@@ -153,7 +160,8 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -222,54 +230,58 @@ const deleteById = (id) =&gt; {
   });
 };
 &nbsp;
-const editOrder = (id, order) =&gt; {
-  return findById(id).then(dbOrder =&gt; {
-    if (dbOrder) {
-      let alreadyInList = false;
-      for (let x of dbOrder.items) {
-        if(x.item.toString() === order.itemId.toString()) {
+// edit the order by id
+// itemDetails = {itemID, quantity}
+const editOrder = (id, itemDetails) =&gt; {
+  return findById(id).then(dbOrder =&gt; {                 // find the order by the given _id
+    if (dbOrder) { 
+      // Found the order
+      let alreadyInList = false;                      
+      for (let x of dbOrder.items) { // check the given item is inside the order already
+        if(x.item.toString() === itemDetails.itemId.toString()) {
           alreadyInList = true;
-          x.quantity = order.quantity;
-          return dbOrder.save();
+          x.quantity = itemDetails.quantity;
+          return dbOrder.save();     // if so, update the data and save.
         }
       }
-      <span class="missing-if-branch" title="else path not taken" >E</span>if(!alreadyInList) {
-        return itemController.findById(order.itemId).then(dbItem =&gt; {
+      // if(!alreadyInList) {
+        // the item is not in the order already, now add this item
+        return itemController.findById(itemDetails.itemId).then(dbItem =&gt; {
           if(dbItem) {
-            dbOrder.items.push( {
+            dbOrder.items.push( { // push to items array
               item: dbItem,
-              quantity: order.quantity, 
+              quantity: itemDetails.quantity, 
             })
-            return dbOrder.save();
+            return dbOrder.save(); // save
           } else {
-            throw "Item Not Found"
+            throw "Item Not Found"  // exception
           }
         });
-      }
+      // }
     } else {
-      throw "Order Not Found"
+      throw "Order Not Found" // exception
     }
   });
 };
 &nbsp;
 const deleteItemFromOrder = (orderId, itemId) =&gt; {
-  return findById(orderId).then((dbOrder) =&gt; {
+  return findById(orderId).then((dbOrder) =&gt; { // find the order by id
     if(dbOrder) {
-      dbOrder.items = dbOrder.items.filter(x =&gt; x.item.toString() !== itemId);
-      return dbOrder.save();
+      dbOrder.items = dbOrder.items.filter(x =&gt; x.item.toString() !== itemId); // filter the item array without the given item id
+      return dbOrder.save(); // save
     } else {
-      throw "Order Not Found";
+      throw "Order Not Found"; // exception
     }
   })
 };
 &nbsp;
 const changeState = (orderId, newStatus) =&gt; {
-  return findById(orderId).then(dbOrder =&gt; {
+  return findById(orderId).then(dbOrder =&gt; { // find the order by id
     if(dbOrder) {
-      dbOrder.status = newStatus;
-      return dbOrder.save();
+      dbOrder.status = newStatus; // change the status
+      return dbOrder.save();      // save
     } else {
-      throw "Order Not Found";
+      throw "Order Not Found";    // exception
     }
   });
 };
@@ -289,7 +301,7 @@ module.exports = {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Mon Jan 28 2019 14:37:49 GMT+0530 (+0530)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Tue Jan 29 2019 11:32:21 GMT+0530 (+0530)
 </div>
 </div>
 <script src="../../prettify.js"></script>

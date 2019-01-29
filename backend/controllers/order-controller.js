@@ -21,30 +21,26 @@ const deleteById = (id) => {
 // itemDetails = {itemID, quantity}
 const editOrder = (id, itemDetails) => {
   return findById(id).then(dbOrder => {                 // find the order by the given _id
-    if (dbOrder) { 
+    if (dbOrder) {
       // Found the order
-      let alreadyInList = false;                      
       for (let x of dbOrder.items) { // check the given item is inside the order already
-        if(x.item.toString() === itemDetails.itemId.toString()) {
-          alreadyInList = true;
+        if (x.item.toString() === itemDetails.itemId.toString()) {
           x.quantity = itemDetails.quantity;
           return dbOrder.save();     // if so, update the data and save.
         }
       }
-      if(!alreadyInList) {
-        // the item is not in the order already, now add this item
-        return itemController.findById(itemDetails.itemId).then(dbItem => {
-          if(dbItem) {
-            dbOrder.items.push( { // push to items array
-              item: dbItem,
-              quantity: itemDetails.quantity, 
-            })
-            return dbOrder.save(); // save
-          } else {
-            throw "Item Not Found"  // exception
-          }
-        });
-      }
+      // the item is not in the order already, now add this item
+      return itemController.findById(itemDetails.itemId).then(dbItem => {
+        if (dbItem) {
+          dbOrder.items.push({ // push to items array
+            item: dbItem,
+            quantity: itemDetails.quantity,
+          })
+          return dbOrder.save(); // save
+        } else {
+          throw "Item Not Found"  // exception
+        }
+      });
     } else {
       throw "Order Not Found" // exception
     }
@@ -53,7 +49,7 @@ const editOrder = (id, itemDetails) => {
 
 const deleteItemFromOrder = (orderId, itemId) => {
   return findById(orderId).then((dbOrder) => { // find the order by id
-    if(dbOrder) {
+    if (dbOrder) {
       dbOrder.items = dbOrder.items.filter(x => x.item.toString() !== itemId); // filter the item array without the given item id
       return dbOrder.save(); // save
     } else {
@@ -64,7 +60,7 @@ const deleteItemFromOrder = (orderId, itemId) => {
 
 const changeState = (orderId, newStatus) => {
   return findById(orderId).then(dbOrder => { // find the order by id
-    if(dbOrder) {
+    if (dbOrder) {
       dbOrder.status = newStatus; // change the status
       return dbOrder.save();      // save
     } else {

@@ -17,10 +17,10 @@ const verifyToken = (token, cb) => {
 
 const createUser = (user) => {
   return User.findOne({ username: user.username }).then(async (result) => { // find user by id
-    if (!user.username || user.username === '') { // basic required validation 
+    if (!user.username) { // basic required validation 
       throw [400, "username is Required"]
     }
-    if (!user.password || user.password === '') {
+    if (!user.password) {
       throw [400, "Password is Required"]
     }
     if (result) {
