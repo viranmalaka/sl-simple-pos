@@ -1,3 +1,5 @@
+
+// copied from  -> https://medium.com/@art.longbottom.jr/concurrent-testing-with-mongoose-and-jest-83a27ceb87ee
 const mongoose = require('mongoose');
 
 // Load models since we will not be instantiating our express server.
@@ -25,7 +27,7 @@ beforeAll(function(done) {
   if (mongoose.connection.readyState === 0) {
     mongoose.Promise = global.Promise;
     mongoose.connect(
-      'mongodb://localhost:27017/simple-pos-test-db', { useNewUrlParser: true }, // <------- IMPORTANT
+      'mongodb://localhost:27017/simple-pos-test-db', { useNewUrlParser: true }, 
       function(err) {
         if (err) {
           throw err;

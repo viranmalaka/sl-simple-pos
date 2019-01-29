@@ -27,11 +27,19 @@ router.get('/:id', authMiddleware, (req, res, next) => {
 
 /* POST create and item */
 router.post('/', authMiddleware, (req, res, next) => {
-  itemController.create(req.body).then((result) => {
-    res.jsonp(result);
-  }).catch((err) => {
-    next(createError(500, err))
-  });
+  if(req.body.name && req.body.name !== '') { // basic validation
+    if(req.body.unitPrice && req.body.unitPrice > -1) {
+      itemController.create(req.body).then((result) => {
+        res.jsonp(result);
+      }).catch((err) => {
+        next(createError(500, err))
+      });
+    } else {
+      next(createError(401, 'Invalid unit price'))
+    }
+  } else {
+    next(createError(401, 'Item name is required'))
+  }
 });
 
 /* DELETE an item by it's _id */

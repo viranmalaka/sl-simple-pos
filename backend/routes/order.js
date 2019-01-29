@@ -35,7 +35,7 @@ router.post('/', authMiddleware, (req, res, next) => {
   });
 });
 
-router.delete('/:id', (req, res, next) => {
+router.delete('/:id', authMiddleware, (req, res, next) => {
   orderController.deleteById(req.params.id).then((result) => {
     res.jsonp(result);
   }).catch((err) => {
@@ -44,7 +44,7 @@ router.delete('/:id', (req, res, next) => {
 });
 
 /* Add item to an order */
-router.put('/add-item/:orderId', (req, res, next) => {
+router.put('/add-item/:orderId', authMiddleware, (req, res, next) => {
   orderController.editOrder(req.params.orderId, req.body).then((result) => {
     res.jsonp(result);
   }).catch((err) => {
@@ -52,7 +52,7 @@ router.put('/add-item/:orderId', (req, res, next) => {
   });
 });
 
-router.put('/change-status/:orderId', (req, res, next) => {
+router.put('/change-status/:orderId', authMiddleware, (req, res, next) => {
   orderController.changeState(req.params.orderId, req.body.status).then((result) => {
     res.jsonp(result);
   }).catch((err) => {
@@ -60,7 +60,7 @@ router.put('/change-status/:orderId', (req, res, next) => {
   });
 });
 
-router.delete('/:orderId/delete-item/:itemId', (req, res, next) => {
+router.delete('/:orderId/delete-item/:itemId', authMiddleware, (req, res, next) => {
   orderController.deleteItemFromOrder(req.params.orderId, req.params.itemId).then((result) => {
     res.jsonp(result);
   }).catch((err) => {

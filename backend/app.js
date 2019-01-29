@@ -14,7 +14,7 @@ var orderRouter = require('./routes/order');
 
 var app = express();
 
-app.use(cors());
+app.use(cors()); // cross origin issues
 
 //MongoDB
 mongoose.Promise = global.Promise;

@@ -9,7 +9,7 @@ test('[EXCEPTION] createUser user validation fail', () => {
   expect.assertions(2);
   return uc.createUser({}).catch(err => {
     expect(err).toBeDefined();
-    expect(err).toEqual('username is Required');
+    expect(err[1]).toEqual('username is Required');
   })
 })
 
@@ -17,14 +17,14 @@ test('[EXCEPTION] createUser user validation fail - only username', () => {
   expect.assertions(2);
   return uc.createUser({username: 'test-user'}).catch(err => {
     expect(err).toBeDefined();
-    expect(err).toEqual('Password is Required');
+    expect(err[1]).toEqual('Password is Required');
   })
 })
 
 test('[EXCEPTION] createUser user validation fail - only password', () => {
   expect.assertions(2);
   return uc.createUser({password: 'test'}).catch(err => {
-    expect(err).toEqual('username is Required');
+    expect(err[1]).toEqual('username is Required');
     expect(err).toBeDefined();
   })
 })
@@ -41,7 +41,7 @@ test('[SUCCESS] createUser success', () => {
 test('[EXCEPTION] createUser user validation fail - user already exist', () => {
   expect.assertions(2);
   return uc.createUser({username: 'test-user', password: 'test'}).catch(err => {
-    expect(err).toEqual('username already exist');
+    expect(err[1]).toEqual('username already exist');
     expect(err).toBeDefined();
   })
 })
@@ -51,7 +51,7 @@ test('[EXCEPTION] Login', () => {
   expect.assertions(2);
   return uc.login({}).catch(err => {
     expect(err).toBeDefined();
-    expect(err).toEqual('User Not Found');
+    expect(err[1]).toEqual('User Not Found');
   })
 });
 
@@ -59,7 +59,7 @@ test('[EXCEPTION] Login', () => {
   expect.assertions(2);
   return uc.login({username : 'test-user', password: ''}).catch(err => {
     expect(err).toBeDefined();
-    expect(err).toEqual('Invalid Password');
+    expect(err[1]).toEqual('Invalid Password');
   })
 });
 

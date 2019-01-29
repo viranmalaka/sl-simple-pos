@@ -17,54 +17,58 @@ const deleteById = (id) => {
   });
 };
 
-const editOrder = (id, order) => {
-  return findById(id).then(dbOrder => {
-    if (dbOrder) {
-      let alreadyInList = false;
-      for (let x of dbOrder.items) {
-        if(x.item.toString() === order.itemId.toString()) {
+// edit the order by id
+// itemDetails = {itemID, quantity}
+const editOrder = (id, itemDetails) => {
+  return findById(id).then(dbOrder => {                 // find the order by the given _id
+    if (dbOrder) { 
+      // Found the order
+      let alreadyInList = false;                      
+      for (let x of dbOrder.items) { // check the given item is inside the order already
+        if(x.item.toString() === itemDetails.itemId.toString()) {
           alreadyInList = true;
-          x.quantity = order.quantity;
-          return dbOrder.save();
+          x.quantity = itemDetails.quantity;
+          return dbOrder.save();     // if so, update the data and save.
         }
       }
       if(!alreadyInList) {
-        return itemController.findById(order.itemId).then(dbItem => {
+        // the item is not in the order already, now add this item
+        return itemController.findById(itemDetails.itemId).then(dbItem => {
           if(dbItem) {
-            dbOrder.items.push( {
+            dbOrder.items.push( { // push to items array
               item: dbItem,
-              quantity: order.quantity, 
+              quantity: itemDetails.quantity, 
             })
-            return dbOrder.save();
+            return dbOrder.save(); // save
           } else {
-            throw "Item Not Found"
+            throw "Item Not Found"  // exception
           }
         });
       }
     } else {
-      throw "Order Not Found"
+      throw "Order Not Found" // exception
     }
   });
 };
 
 const deleteItemFromOrder = (orderId, itemId) => {
-  return findById(orderId).then((dbOrder) => {
+  return findById(orderId).then((dbOrder) => { // find the order by id
     if(dbOrder) {
-      dbOrder.items = dbOrder.items.filter(x => x.item.toString() !== itemId);
-      return dbOrder.save();
+      dbOrder.items = dbOrder.items.filter(x => x.item.toString() !== itemId); // filter the item array without the given item id
+      return dbOrder.save(); // save
     } else {
-      throw "Order Not Found";
+      throw "Order Not Found"; // exception
     }
   })
 };
 
 const changeState = (orderId, newStatus) => {
-  return findById(orderId).then(dbOrder => {
+  return findById(orderId).then(dbOrder => { // find the order by id
     if(dbOrder) {
-      dbOrder.status = newStatus;
-      return dbOrder.save();
+      dbOrder.status = newStatus; // change the status
+      return dbOrder.save();      // save
     } else {
-      throw "Order Not Found";
+      throw "Order Not Found";    // exception
     }
   });
 };

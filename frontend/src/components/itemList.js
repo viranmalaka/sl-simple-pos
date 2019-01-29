@@ -52,6 +52,11 @@ class ItemList extends React.Component {
               <Message.Header>You Have no any Item</Message.Header>
               You can add items by using above button.
             </Message.Content>
+            <li>
+              <div>sdfa</div>
+              <ul></ul>
+              <ul></ul>
+            </li>
           </Message>
         )
       } else {

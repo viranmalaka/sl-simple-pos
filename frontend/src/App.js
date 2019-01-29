@@ -11,7 +11,6 @@ export default class App extends Component {
     return (
       <div className="App">
         <Router>
-
           <div>
             <Switch>
               <Redirect from="/" to="/login" exact />
