@@ -69,7 +69,7 @@ class ItemList extends React.Component {
               <Card key={itm._id}>
                 <Card.Content>
                   <Card.Header>{itm.name}</Card.Header>
-                  <Card.Meta>Unit Price: ${itm.unitPrice}</Card.Meta>
+                  <Card.Meta>Item Id: {itm.itemId} <br/> Unit Price: ${itm.unitPrice}</Card.Meta>
                   <Card.Description>{itm.description}</Card.Description>
                 </Card.Content>
               </Card>

@@ -4,30 +4,41 @@ import { getAllOrders, addItemToOrder, setCurrentOrder, deleteItemFromOrder, set
 
 import { connect } from 'react-redux';
 import { Button, Card, Header, Modal, Grid, Input, Segment, Divider } from 'semantic-ui-react'
-import {toast} from 'react-toastify';
+import { toast } from 'react-toastify';
 
 class OrderDetails extends React.Component {
 
   state = {
     forceDelete: {},
     addItemModal: false,
+    modalOpen: false,
+    quantityModal: false,
+    selectedItem: '',
+    selectedQty: 0
   }
 
   handleOpen = () => this.setState({ modalOpen: true })
 
   handleClose = () => this.setState({ modalOpen: false })
 
+  handleOpenQuantity = () => this.setState({ quantityModal: true })
+
+  handleCloseQuantity = () => this.setState({ quantityModal: false })
+
+  handleSelectItem = (id) => this.setState({ selectedItem: id })
+  handleSelectQty = (qty) => this.setState({ selectedQty: qty })
+
   onRemoveItem(id) {
     this.props.deleteItemFromOrder(this.props.order.currentOrder._id, id, this.props.item.itemsById);
   }
 
-  addItemToOrder(itemId) {
-    if (this.props.order.currentOrder.items.filter(x => x.item === itemId).length === 0) {  // if that items already not in the order     
-      this.props.addItemToOrder(this.props.order.currentOrder._id, itemId, 0, this.props.item.itemsById).then(result => {
-        this.handleClose();
+  addItemToOrder(qty) {
+    if (this.props.order.currentOrder.items.filter(x => x.item === this.state.selectedItem).length === 0) {  // if that items already not in the order     
+      this.props.addItemToOrder(this.props.order.currentOrder._id, this.state.selectedItem, qty, this.props.item.itemsById).then(result => {
+        this.handleCloseQuantity();
       });
     } else {  // if the item already exist then do nothing. close the modal
-      this.handleClose();
+      this.handleCloseQuantity();
     }
   }
 
@@ -116,7 +127,7 @@ class OrderDetails extends React.Component {
                     {
                       this.props.item.allItems.map(itm => {
                         return (
-                          <Card key={itm._id} onClick={() => { this.addItemToOrder(itm._id) }}>
+                          <Card key={itm._id} onClick={() => { this.handleSelectItem(itm._id); this.handleClose(); this.handleOpenQuantity() }}>
                             <Card.Content>
                               <Card.Header>{itm.name}</Card.Header>
                               <Card.Meta>Unit Price: ${itm.unitPrice}</Card.Meta>
@@ -127,6 +138,32 @@ class OrderDetails extends React.Component {
                       })
                     }
 
+                  </Card.Group>
+                </Modal.Content>
+              </Modal>
+
+              <Modal open={this.state.quantityModal} onClose={this.handleCloseQuantity} basic size='large'>
+                <Header icon='hand point up outline' content='Select the Quantity' />
+                <Modal.Content>
+                  <Card.Group itemsPerRow="3">
+                    {
+                      [1, 2, 3, 4, 5, 6, 8, 9, 10].map(qty => {
+                        return (
+                          <Card key={qty} onClick={() => { this.addItemToOrder(qty) }}>
+                            <Card.Content>
+                              <Card.Header className="qty-headers">{qty}</Card.Header>
+                            </Card.Content>
+                          </Card>
+                        )
+                      })
+                    }
+                    <Card>
+                      <Card.Content>
+                        {/* <Card.Header className="qty-headers">{qty}</Card.Header> */}
+                        <Input action={{content:'OK', color: 'green', onClick: () => {this.addItemToOrder(this.state.selectedQty)} }} placeholder='Quantity' 
+                        onChange={(e) => this.handleSelectQty(e.target.value)}></Input>
+                      </Card.Content>
+                    </Card>
                   </Card.Group>
                 </Modal.Content>
               </Modal>

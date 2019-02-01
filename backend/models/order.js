@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var autoIncrement = require('mongoose-auto-increment');
 
 var schema = new Schema({
     items : {
@@ -11,5 +12,8 @@ var schema = new Schema({
         required : true,
     }
 });
+
+autoIncrement.initialize(mongoose.connection)
+schema.plugin(autoIncrement.plugin, { model: 'Order', field: 'orderId', startAt: 10000 })
 
 module.exports = mongoose.model('Order', schema);

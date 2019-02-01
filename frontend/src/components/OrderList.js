@@ -50,7 +50,7 @@ class OrderList extends React.Component {
               <Card.Content >
                 <Grid>
                   <Grid.Column width="10" >
-                    <Card.Header><h3># {index + 1}</h3></Card.Header>
+                    <Card.Header><h3># {odr.orderId}</h3></Card.Header>
                     <Card.Meta>{odr.items && odr.items.length} items</Card.Meta>
                     <Card.Description>
                       <span style={{ color: 'black' }}>
