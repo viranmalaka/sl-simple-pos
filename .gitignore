@@ -4,3 +4,4 @@
 /frontend/package-lock.json
 /backend/temp
 .vscode
+/golang-backend/simple-rest-api
